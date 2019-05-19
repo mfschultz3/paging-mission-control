@@ -6,6 +6,8 @@ import java.util.Date;
  * 
  * @author Morris Schultz
  *
+ *	Telemetry Data object
+ *
  */
 
 public class TelemetryData {
