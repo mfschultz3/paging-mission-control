@@ -2,9 +2,15 @@ package com.schultz.app;
 
 import java.util.Date;
 
-public class Data {
+/**
+ * 
+ * @author Morris Schultz
+ *
+ */
+
+public class TelemetryData {
 	
-	public Data(Date timestamp, String satelliteId, int redHighLimit, int redLowLimit, int yellowHighLimit,
+	public TelemetryData(Date timestamp, String satelliteId, int redHighLimit, int redLowLimit, int yellowHighLimit,
 			int yellowLowLimit, double rawValue, String component) {
 		super();
 		this.timestamp = timestamp;

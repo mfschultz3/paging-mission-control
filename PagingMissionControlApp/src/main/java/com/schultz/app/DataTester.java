@@ -10,19 +10,28 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+
+/**
+ * 
+ * @author Morris Schultz
+ * 
+ * This class is built to test the data and alert the user if violation conditions are met.
+ *
+ */
+
 public class DataTester {
 
-	public void testData (Map<String, ArrayList<Data>> dataMap) {
+	public void testData (Map<String, ArrayList<TelemetryData>> dataMap) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonArray jsonArray = new JsonArray();
 		for (String key : dataMap.keySet()) { //all data has been broken into 4 types based on SatId and Component
-			Data baseLineData = null;
+			TelemetryData baseLineData = null;
 			Date fiveMinutesLater = null; // five minutes after the baseline
 			int count = 0; //keeps track of how many "red" we get
 			boolean searching = true; //when we are done searching through a set of data, we will set to false
 			while (searching) { //using this to check after a 'red' is found to be too long after initial red
 								//if all data will be within 5 minute windows (per file), we can remove this
-				for (Data data : dataMap.get(key)) { 
+				for (TelemetryData data : dataMap.get(key)) { 
 					if (data.isRedHigh() || data.isRedLow()) { //if this is red
 						baseLineData = (baseLineData == null) ? data : baseLineData; //make sure baseline is set
 						fiveMinutesLater = makeFiveMinutesLater(data.timestamp); //setup the 5 minute window
@@ -45,10 +54,10 @@ public class DataTester {
 				}
 			}			
 		}
-		System.out.println(gson.toJson(jsonArray)); //print the final result
+		System.out.println(gson.toJson(jsonArray)); //print the alerts
 	}
 	
-	private JsonObject makeJsonObject(Data data) {
+	private JsonObject makeJsonObject(TelemetryData data) {
 		
 		JsonObject json = new JsonObject();
 		
