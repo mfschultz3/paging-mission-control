@@ -30,8 +30,6 @@ public class TelemetryData {
 	String satelliteId;
 	String component;
 	
-
-
 	int redHighLimit;
 	int redLowLimit;
 	int yellowHighLimit;

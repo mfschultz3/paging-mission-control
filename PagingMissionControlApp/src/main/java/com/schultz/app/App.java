@@ -5,7 +5,10 @@ import java.util.Map;
 
 /**
  * 
- * @author Morris Schultz
+ * @author Morris Schultz <br>
+ *
+ * @description
+ * This Java application is built to process status telemetry from satellites and generates alert messages in cases of certain limit violation scenarios.
  *
  */
 

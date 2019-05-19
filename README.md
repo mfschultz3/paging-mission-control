@@ -14,9 +14,9 @@ Gson 2.8.5 has been imported (using Maven) in order to handle JSON objects
 2. Data in the output does not need to be in a particular order
 
 ###Future Updates / Maintenance
-Instead of using a single array/list I put the data into a map based on SatId and Component.  This will hopefully be flexible enough if
-additional satellites are added, code changes would be minimal.
-Within DataTester.checkForAlarms() I have tried to prepare for larger sets of data, where everything is not just within 5 minutes.
+* Instead of using a single array/list I put the data into a map based on SatId and Component.  This will hopefully be flexible enough if additional satellites are added, code changes would be minimal.  <br>
+* Within DataTester.checkForAlarms() I have tried to prepare for larger sets of data, where everything is not just within 5 minutes.  <br>
+* As an overall goal, I have attempted to iterate over the data as little as possible, to increase efficiency and to detect when violation scenarios have not been met quickly.
 
 ### Input
 

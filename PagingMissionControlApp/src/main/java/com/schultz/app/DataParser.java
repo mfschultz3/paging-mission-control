@@ -16,11 +16,16 @@ import java.util.Map;
  * 
  * @author Morris Schultz
  *
- *	This class will load and read a file, parse that file, and sort the data into a Map
+ *<br>
+ * @description
+ *	This class will load and read a file, parse that file, and sort the data into a Map of Telemetry data
+ * that meets Red Limit criteria
  *
  */
 
 public class DataParser {
+	
+	private final static SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");
 	
 	public Map<String, ArrayList<TelemetryData>> loadAndReadFile(String fileName) {
 		
@@ -34,21 +39,21 @@ public class DataParser {
 			reader = new FileReader(file);
 			br = new BufferedReader(reader);
 			
-			
 			String line = null;
 
 			while ((line = br.readLine()) != null) {
-//				System.out.println(line);
 				TelemetryData data = parseLine(line);
-				
-				String key = data.getSatelliteId() + "_" + data.getComponent(); //use the ID and Component as the Key
-				ArrayList<TelemetryData> list = map.get(key);
-				if (list == null) {
-					list = new ArrayList<TelemetryData>();
-					map.put(key, list);
+				if (data != null) {
+					String key = data.getSatelliteId() + "_" + data.getComponent(); //use the ID and Component as the Key
+					ArrayList<TelemetryData> list = map.get(key);
+					if (list == null) {
+						list = new ArrayList<TelemetryData>();
+						map.put(key, list);
+					}
+					if (data.isRedHigh() || data.isRedLow()) { //if this meets criteria we add it to the list, if not, we don't need it
+						list.add(data);
+					}
 				}
-				list.add(data);
-	
 			}
 			
 			return map;
@@ -56,7 +61,7 @@ public class DataParser {
 		} catch (IOException e) {
 			System.out.println("Error reading input");
 			e.printStackTrace();
-		}
+		} 
 		finally {
 			try {
 				if (br != null) {
@@ -90,9 +95,9 @@ public class DataParser {
 //		DateFormat: 20180101 23:01:05.001
 		try {
 		Date date;
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");
+		
 		date = df.parse(array[0].toString());
-//		System.out.println(date);
+
 		TelemetryData data = new TelemetryData(date //timestamp
 				, array[1].toString() //sat number
 				, Integer.parseInt(array[2]) //Red high
@@ -106,7 +111,11 @@ public class DataParser {
 		} catch (ParseException e) {
 			System.out.println("Date did not parse");
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("A number did not parse");
+			e.printStackTrace();
 		}
+		//if we get here, something went wrong and we should be throwing an exception before this point
 		return null;
 	
 	}
