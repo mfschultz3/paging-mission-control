@@ -1,5 +1,6 @@
 package com.schultz.app;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -15,13 +16,13 @@ import com.google.gson.JsonObject;
  * 
  * @author Morris Schultz
  * 
- * This class is built to test the data and alert the user if violation conditions are met.
+ * This class is built to test the data and creates/prints an alarm if violation conditions are met.
  *
  */
 
 public class DataTester {
 
-	public void testData (Map<String, ArrayList<TelemetryData>> dataMap) {
+	public void checkForAlarms (Map<String, ArrayList<TelemetryData>> dataMap) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonArray jsonArray = new JsonArray();
 		for (String key : dataMap.keySet()) { //all data has been broken into 4 types based on SatId and Component
@@ -38,7 +39,7 @@ public class DataTester {
 						if (fiveMinutesLater.after(data.getTimestamp())) { //we assume all data is in chronological order
 							count ++; //add to the red count. This includes the initial baseline red
 							if (count > 2) {
-								jsonArray.add(makeJsonObject(baseLineData)); //add the baseline to the output
+								jsonArray.add(makeJsonObject(baseLineData)); //add the baseline to the output to create alarm
 								searching = false; //we can stop searching this list, it has met the criteria
 								break; //make sure we don't accidently hit the reset in the else statement below and protects from too many JsonObjects added
 							}
@@ -57,15 +58,25 @@ public class DataTester {
 		System.out.println(gson.toJson(jsonArray)); //print the alerts
 	}
 	
+	/**
+	 * This is used when an alarm is created
+	 * 
+	 * @param data
+	 * @return JsonObject
+	 */
 	private JsonObject makeJsonObject(TelemetryData data) {
 		
 		JsonObject json = new JsonObject();
 		
 		json.addProperty("satelliteId", data.getSatelliteId());
+		
 		String severity = ((data.isRedHigh()) ? "RED HIGH" : "RED LOW");
 		json.addProperty("severity", severity);
+		
 		json.addProperty("component", data.getComponent());
-		json.addProperty("timestamp", data.getTimestamp().toString());
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		json.addProperty("timestamp", df.format(data.getTimestamp()));
 		
 		return json;
 	}
