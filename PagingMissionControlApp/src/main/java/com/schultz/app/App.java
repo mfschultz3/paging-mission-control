@@ -20,6 +20,6 @@ public class App
     	DataParser dataParser = new DataParser();
     	Map<String, ArrayList<TelemetryData>> dataMap = dataParser.loadAndReadFile(fileName);
     	DataTester tester = new DataTester();
-    	tester.testData(dataMap);
+    	tester.checkForAlarms(dataMap);
     }
 }
