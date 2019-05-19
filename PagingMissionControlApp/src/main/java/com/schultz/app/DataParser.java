@@ -12,29 +12,39 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author Morris Schultz
+ *
+ *	This class will load and read a file, parse that file, and sort the data into a Map
+ *
+ */
+
 public class DataParser {
 	
-	public Map<String, ArrayList<Data>> loadAndReadFile(String fileName) {
+	public Map<String, ArrayList<TelemetryData>> loadAndReadFile(String fileName) {
 		
 		File file = null;
 		BufferedReader br = null;
+		FileReader reader = null;
 		try {
-			Map<String, ArrayList<Data>> map = new HashMap<String, ArrayList<Data>>();
+			Map<String, ArrayList<TelemetryData>> map = new HashMap<String, ArrayList<TelemetryData>>();
 			
 			file = getFileFromResources(fileName);
-			FileReader reader = new FileReader(file);
+			reader = new FileReader(file);
 			br = new BufferedReader(reader);
+			
 			
 			String line = null;
 
 			while ((line = br.readLine()) != null) {
 //				System.out.println(line);
-				Data data = parseLine(line);
+				TelemetryData data = parseLine(line);
 				
 				String key = data.getSatelliteId() + "_" + data.getComponent(); //use the ID and Component as the Key
-				ArrayList<Data> list = map.get(key);
+				ArrayList<TelemetryData> list = map.get(key);
 				if (list == null) {
-					list = new ArrayList<Data>();
+					list = new ArrayList<TelemetryData>();
 					map.put(key, list);
 				}
 				list.add(data);
@@ -50,7 +60,10 @@ public class DataParser {
 		finally {
 			try {
 				if (br != null) {
-					br.close();
+					br.close(); //close the bufferedReader	
+				}
+				if (reader != null) {
+					reader.close(); //close the fileReader
 				}
 			} catch (IOException e) {
 				System.out.println("Error closing Stream");
@@ -72,7 +85,7 @@ public class DataParser {
 		}
 	}
 	
-	private Data parseLine(String line) {
+	private TelemetryData parseLine(String line) {
 		String[] array = line.split("\\|");
 //		DateFormat: 20180101 23:01:05.001
 		try {
@@ -80,7 +93,7 @@ public class DataParser {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");
 		date = df.parse(array[0].toString());
 //		System.out.println(date);
-		Data data = new Data(date //timestamp
+		TelemetryData data = new TelemetryData(date //timestamp
 				, array[1].toString() //sat number
 				, Integer.parseInt(array[2]) //Red high
 				, Integer.parseInt(array[3]) //yellow high
