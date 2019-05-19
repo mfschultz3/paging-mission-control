@@ -1,13 +1,19 @@
 package com.schultz.app;
 
-/**
- * Hello world!
- *
- */
+import java.util.ArrayList;
+import java.util.Map;
+
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        //run pagingMissionControl
+    	DataParser dataParser = new DataParser();
+    	
+    	Map<String, ArrayList<Data>> dataMap = dataParser.loadAndReadFile("satelliteData.txt");
+    	
+    	DataTester tester = new DataTester();
+    	tester.testData(dataMap);
+    	
     }
 }
