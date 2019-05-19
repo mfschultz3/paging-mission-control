@@ -13,13 +13,13 @@ public class App
 {
     public static void main( String[] args )
     {
-        //run pagingMissionControl
+        runPagingMissionControl("satelliteData.txt");  	
+    }
+    
+    private static void runPagingMissionControl(String fileName) {
     	DataParser dataParser = new DataParser();
-    	
-    	Map<String, ArrayList<TelemetryData>> dataMap = dataParser.loadAndReadFile("satelliteData.txt");
-    	
+    	Map<String, ArrayList<TelemetryData>> dataMap = dataParser.loadAndReadFile(fileName);
     	DataTester tester = new DataTester();
     	tester.testData(dataMap);
-    	
     }
 }
